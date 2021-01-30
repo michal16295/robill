@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import paths from "./constants/paths";
+import Login from "./screens/Login";
+import Register from "./screens/Register";
+import Home from "./screens/Home";
+import NavBar from "./components/NavBar";
+import UserProvider from "./providers/UserProvider";
 
-function App() {
+const App = () => {
+  const history = useHistory();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserProvider>
+      <Router history={history}>
+        <NavBar />
+        <Switch>
+          <Route key="Home" path={paths.HOME || "/"} component={Home} />
+          <Route key="Login" exact path={paths.LOGIN} component={Login} />
+          <Route
+            key="Register"
+            exact
+            path={paths.REGISTER}
+            component={Register}
+          />
+        </Switch>
+      </Router>
+    </UserProvider>
   );
-}
+};
 
 export default App;
