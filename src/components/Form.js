@@ -1,6 +1,4 @@
 import React from "react";
-import { Message } from "semantic-ui-react";
-import { Loader, Modal } from "semantic-ui-react";
 
 const Form = ({
   heading,

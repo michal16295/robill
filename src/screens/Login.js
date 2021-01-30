@@ -43,7 +43,7 @@ const Login = ({ open, setOpen, click }) => {
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
             open={open}
-            style={{ width: "20%" }}
+            style={{ width: "50%" }}
           >
             <Form
               heading="Login"
