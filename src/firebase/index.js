@@ -56,7 +56,7 @@ export const login = async (email, password) => {
     await addEntry(email, 0, 0);
     await auth.signInWithEmailAndPassword(email, password);
   } catch (error) {
-    console.log(error);
+    return error.message;
   }
 };
 

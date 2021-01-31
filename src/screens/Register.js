@@ -21,6 +21,10 @@ const Register = ({ open, setOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.email === "" || formData.password === "") {
+      setError("All fields are required!");
+      return;
+    }
     try {
       const { user } = await auth.createUserWithEmailAndPassword(
         formData.email,
@@ -50,6 +54,11 @@ const Register = ({ open, setOpen }) => {
           formData={formData}
           error={error}
         />
+        {error !== "" && (
+          <Message negative>
+            <Message.Header>{error}</Message.Header>
+          </Message>
+        )}
       </Modal>
     </div>
   );

@@ -38,8 +38,11 @@ const Form = ({
             Submit
           </button>
           <br />
-          <button onClick={onGoogleSubmit} class="fluid ui google plus button">
-            <i class="google plus icon"></i>
+          <button
+            onClick={onGoogleSubmit}
+            className="fluid ui google plus button"
+          >
+            <i className="google plus icon"></i>
             {heading} with Google
           </button>
         </div>

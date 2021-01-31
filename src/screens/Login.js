@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import Form from "../components/Form";
 import paths from "../constants/paths";
-import { addEntry, signInWithGoogle } from "../firebase/index";
+import { signInWithGoogle } from "../firebase/index";
 import { UserContext } from "../providers/UserProvider";
-import { Modal } from "semantic-ui-react";
+import { Modal, Message } from "semantic-ui-react";
 import { login } from "../firebase/index";
 import Register from "./Register";
 
@@ -14,6 +14,7 @@ const Login = ({ open, setOpen, click }) => {
   });
   const user = useContext(UserContext);
   const [register, setRegister] = useState(false);
+  const [error, setError] = useState("");
 
   if (user) window.location = paths.HOME;
 
@@ -25,9 +26,14 @@ const Login = ({ open, setOpen, click }) => {
   };
 
   const handleSubmit = async (e) => {
+    if (formData.email === "" || formData.password === "") {
+      setError("All fields are required!");
+      return;
+    }
     e.preventDefault();
+    const res = await login(formData.email, formData.password);
     setFormData({ email: "", password: "" });
-    login(formData.email, formData.password);
+    setError(res);
   };
 
   const handleGoogleSubmit = (e) => {
@@ -61,6 +67,11 @@ const Login = ({ open, setOpen, click }) => {
                 Sign up
               </a>
             </p>
+            {error !== "" && (
+              <Message negative>
+                <Message.Header>{error}</Message.Header>
+              </Message>
+            )}
           </Modal>
         </>
       )}
