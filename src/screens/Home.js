@@ -1,43 +1,41 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import paths from "../constants/paths";
+import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
-import { addEntry, getNumberOfClicks } from "../firebase/index";
-import { Loader } from "semantic-ui-react";
+import { addEntry } from "../firebase/index";
+import { getReferral } from "../services/referral.service";
+import { useClicks } from "../hooks/useClicks";
 import Login from "./Login";
 
-const Home = ({}) => {
-  const user = useContext(UserContext);
-  const history = useHistory();
-  const [loading, setLoading] = useState(false);
-  const [x, setX] = useState(1);
-  const [y, setY] = useState(2);
+const Home = () => {
   const [open, setOpen] = useState(false);
-  const [clicks, setClicks] = useState("");
+  const [fromUrl, setFromUrl] = useState(null);
+  const user = useContext(UserContext);
+  const [clicks, setClicks] = useClicks();
 
-  const fetchMyAPI = useCallback(async () => {
-    let response = await getNumberOfClicks();
-    setClicks(response.numberOfClicks);
-  }, []);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setX(x + 1);
-    setY(y + 1);
-    if (!user) {
-      setLoading(false);
-      setOpen(true);
-    } else {
-      addEntry(user.email, x, y);
-      setClicks(clicks + 1);
-      history.push(`${paths.HOME}?x=${x}&y=${y}`);
-    }
-    setLoading(false);
-  };
   useEffect(() => {
-    fetchMyAPI();
-  }, [fetchMyAPI]);
+    if (user === undefined) setOpen(true);
+    else if (user) {
+      const url = getReturningUrl();
+      console.log(url);
+      if (url !== "") {
+        (async () => {
+          await addEntry(user.email, url);
+          window.location.href = url;
+        })();
+      }
+    }
+  }, [user]);
+
+  const getReturningUrl = () => {
+    const url = new URL(window.location);
+    const params = new URLSearchParams(url.search);
+    let from =
+      params.getAll("from")[0] ||
+      document.referrer.split("?from=")[1] ||
+      document.referrer;
+    from = getReferral(from, user.email);
+    setFromUrl(from);
+    return from;
+  };
 
   return (
     <div
@@ -49,22 +47,27 @@ const Home = ({}) => {
         top: "200px",
       }}
     >
-      {loading ? (
-        <Loader active inline="centered" />
-      ) : (
-        <>
-          {open ? (
-            <Login open={open} setOpen={setOpen} click={true} />
-          ) : (
-            <>
-              <h4>Number of clicks: {clicks}</h4>
-              <button onClick={handleClick} className="fluid ui button">
-                Click me!
+      <>
+        {open ? (
+          <Login open={open} setOpen={setOpen} click={true} />
+        ) : (
+          <>
+            <h2>WELCOME</h2>
+            {fromUrl === "" && (
+              <strong style={{ color: "red" }}>Missing Referral</strong>
+            )}
+            <div>Number of Entries: {clicks}</div>
+            {!user && (
+              <button
+                className="ui red basic button"
+                onClick={() => setOpen(true)}
+              >
+                Please sign in
               </button>
-            </>
-          )}
-        </>
-      )}
+            )}
+          </>
+        )}
+      </>
     </div>
   );
 };

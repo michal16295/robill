@@ -17,7 +17,8 @@ const NavBar = ({}) => {
 
   const handleItemClick = (e, { name }) => {
     setActiveItem({ active: currentPath });
-    history.push(name);
+    if (name === "home") history.push("/");
+    else history.push(name);
   };
 
   const handleLogout = async () => {
@@ -40,6 +41,11 @@ const NavBar = ({}) => {
       <Menu.Item
         name={"home"}
         active={activeItem.active === paths.HOME}
+        onClick={handleItemClick}
+      />
+      <Menu.Item
+        name={"button"}
+        active={activeItem.active === paths.BUTTON}
         onClick={handleItemClick}
       />
       {user && LoggedIn}

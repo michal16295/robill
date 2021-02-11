@@ -21,14 +21,14 @@ export const auth = firebase.auth();
 export const signInWithGoogle = () => {
   auth.signInWithPopup(provider);
 };
-export const addEntry = async (user, x, y) => {
-  console.log(user);
+export const addEntry = async (user, from, x = 0, y = 0) => {
   try {
     await firestore.collection(collections.ENTRIES).add({
       user,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       x,
       y,
+      from,
     });
     let currentCount = await getNumberOfClicks();
     await firestore
@@ -53,7 +53,6 @@ export const getNumberOfClicks = async () => {
 };
 export const login = async (email, password) => {
   try {
-    await addEntry(email, 0, 0);
     await auth.signInWithEmailAndPassword(email, password);
   } catch (error) {
     return error.message;

@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import paths from "./constants/paths";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
+import Button from "./screens/Button";
 import Home from "./screens/Home";
 import NavBar from "./components/NavBar";
 import UserProvider from "./providers/UserProvider";
@@ -15,7 +16,8 @@ const App = () => {
       <Router history={history}>
         <NavBar />
         <Switch>
-          <Route key="Home" path={paths.HOME || "/"} component={Home} />
+          <Route key="Home" exact path={paths.HOME} component={Home} />
+          <Route key="Button" exact path={paths.BUTTON} component={Button} />
           <Route key="Login" exact path={paths.LOGIN} component={Login} />
           <Route
             key="Register"

@@ -3,6 +3,7 @@ const paths = {
   // Users
   LOGIN: "/login",
   REGISTER: "/register",
+  BUTTON: "/button",
   HOME: "/",
 };
 
